@@ -1,4 +1,4 @@
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db, updateDocumentById } from "../firebase/firebase";
@@ -7,7 +7,8 @@ import { FaCalendar, FaCircle, FaGlobe, FaStar } from "react-icons/fa";
 import { FaCircleCheck } from "react-icons/fa6";
 import CourseAccordion from "../components/CourseAccordion";
 import { useSelector } from "react-redux";
-import { loadScript } from "../utils/script";
+import { checkReviewed, getReviewForCourse, loadScript } from "../utils/script";
+import { toast } from "react-toastify";
 
 const CourseDetails = () => {
   const { currentUser } = useSelector((state) => state.userReducer);
@@ -17,7 +18,17 @@ const CourseDetails = () => {
   const [razorPay, setRazorPay] = useState(null);
 
   const isEnrolled =
-    currentUser.courses.findIndex((ele) => ele.id === courseId) !== -1;
+    currentUser?.courses.findIndex((ele) => ele.id === courseId) !== -1;
+
+  useEffect(() => {
+    const unSub = onSnapshot(doc(db, "courses", courseId), (doc) => {
+      doc.exists() && setCourse(doc.data());
+    });
+
+    return () => {
+      unSub();
+    };
+  }, [courseId]);
 
   useEffect(() => {
     const handlePayment = async () => {
@@ -27,7 +38,6 @@ const CourseDetails = () => {
         currency: "INR",
         description: "Payment for your service",
         handler: async (response) => {
-          console.log(currentUser.courses);
           const updatedData = {
             ...currentUser,
             courses: [
@@ -35,7 +45,14 @@ const CourseDetails = () => {
               { id: courseId, review: 0, progress: 0 },
             ],
           };
-
+          const courseUpdate = {
+            ...course,
+            students: [
+              ...course.students,
+              { name: currentUser.displayName, email: currentUser.email },
+            ],
+          };
+          await updateDocumentById("courses", courseId, courseUpdate);
           await updateDocumentById("users", currentUser.id, updatedData);
         },
       };
@@ -66,8 +83,6 @@ const CourseDetails = () => {
     getCourse();
   }, [courseId]);
 
-  console.log(course?.syllabus);
-
   return (
     <div className="w-[100%] ">
       <section
@@ -92,7 +107,67 @@ const CourseDetails = () => {
                   fractions={2}
                   fullSymbol={<FaStar color="gold" />}
                   emptySymbol={<FaStar color="grey" />}
-                  readonly
+                  readonly={!isEnrolled}
+                  onClick={async (value) => {
+                    if (!isEnrolled) {
+                      toast.error("Please Enroll to review the course");
+                      return;
+                    }
+                    if (
+                      isEnrolled &&
+                      currentUser?.courses &&
+                      checkReviewed(currentUser?.courses, courseId)
+                    ) {
+                      const userReview =
+                        currentUser?.courses &&
+                        getReviewForCourse(currentUser?.courses, courseId);
+                      const updatedData = {
+                        ...course,
+                        review:
+                          (course.review - userReview + value) /
+                          course.reviewCount,
+                      };
+
+                      await updateDocumentById(
+                        "courses",
+                        courseId,
+                        updatedData
+                      );
+                      currentUser?.courses.forEach((ele) => {
+                        if (ele.id === courseId) {
+                          ele.review = value;
+                        }
+                      });
+                      await updateDocumentById(
+                        "users",
+                        currentUser?.id,
+                        currentUser
+                      );
+                    } else {
+                      const updatedData = {
+                        ...course,
+                        review:
+                          (course.review + value) / (course.reviewCount + 1),
+                        reviewCount: course.reviewCount + 1,
+                      };
+
+                      await updateDocumentById(
+                        "courses",
+                        courseId,
+                        updatedData
+                      );
+                      currentUser?.courses.forEach((ele) => {
+                        if (ele.id === courseId) {
+                          ele.review = value;
+                        }
+                      });
+                      await updateDocumentById(
+                        "users",
+                        currentUser?.id,
+                        currentUser
+                      );
+                    }
+                  }}
                 />
                 <p className="pb-[4px]">
                   {`(${course?.reviewCount})`}{" "}

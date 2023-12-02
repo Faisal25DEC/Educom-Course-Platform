@@ -46,9 +46,8 @@ export const createUserDocumentFromAuth = async (
   additionalInformation
 ) => {
   if (!userAuth) return;
-  console.log(userAuth.uid);
+
   const userDocRef = doc(db, "users", userAuth.uid);
-  console.log(userDocRef);
 
   const userSnapshot = await getDoc(userDocRef);
   if (!userSnapshot.exists()) {
@@ -72,7 +71,6 @@ export const createUserDocumentFromAuth = async (
 
 export const getUserDocumentFromAuth = async (user) => {
   const userDocRef = doc(db, "users", user.uid);
-  console.log(userDocRef);
 
   const userSnapshot = await getDoc(userDocRef);
   return userSnapshot;
@@ -125,22 +123,17 @@ export const updateBookings = async (user, bookedDestination) => {
   console.log("booking updated");
 };
 export const updateUserDocumentFromAuth = async (user, newDisplayName) => {
-  console.log(newDisplayName);
   const userRef = doc(db, "users", user.uid);
   const userSnapshot = await getDoc(userRef);
-  updateDoc(userRef, {
+  await updateDoc(userRef, {
     displayName: newDisplayName,
-  }).then((res) => {
-    console.log(res);
   });
-  console.log("document updated");
 };
 
 export const setCourse = async (course) => {
   const courseRef = doc(db, "courses", uuid() + Date.now());
   try {
     await setDoc(courseRef, course);
-    console.log("course updated");
   } catch (err) {
     console.log(err);
   }

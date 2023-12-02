@@ -5,9 +5,7 @@ import Card from "react-bootstrap/Card";
 import { RiArrowDropDownLine } from "react-icons/ri";
 
 function CustomToggle({ children, eventKey }) {
-  const decoratedOnClick = useAccordionButton(eventKey, () =>
-    console.log("totally custom!")
-  );
+  const decoratedOnClick = useAccordionButton(eventKey);
 
   return (
     <button type="button" onClick={decoratedOnClick}>
@@ -17,7 +15,6 @@ function CustomToggle({ children, eventKey }) {
 }
 
 function CourseAccordion({ content, idx }) {
-  console.log(content);
   return (
     <div className="bg-[#1f1f1f] w-[100%]">
       <Accordion defaultActiveKey="0">
