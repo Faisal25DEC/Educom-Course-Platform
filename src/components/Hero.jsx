@@ -5,7 +5,7 @@ import { primaryColor } from "../constants";
 const Hero = () => {
   return (
     <div className="flex items-center justify-between w-[80%] m-auto h-[90vh]">
-      <div className="px-12 py-24 flex-[1.60] h-[100%] flex flex-col gap-6 ">
+      <div className="pr-12 py-24 flex-[1.60] h-[100%] flex flex-col gap-6 ">
         <h1 className="text-neutral-800 font-bold text-[60px] leading-normal">
           Take Your Learning to The Next Level.
         </h1>
@@ -22,7 +22,7 @@ const Hero = () => {
           </button>
         </div>
       </div>
-      <div className={`flex-[1.40] bg-[${primaryColor}] rounded-lg px-2`}>
+      <div className={`flex-[1.40] bg-[${primaryColor}] rounded-t-lg px-2`}>
         <img src={HeroImg} alt="hero" className="mt-4 h-[100%] w-[100%]" />
       </div>
     </div>

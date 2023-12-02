@@ -24,7 +24,7 @@ const Banner = () => {
   ];
 
   return (
-    <div className="w-[100%] bg-[#ebeffc] py-8">
+    <div className="w-[100%] bg-[#fafbff] py-8">
       <div className="w-[80%] flex items-center gap-4 m-auto">
         <div className="flex-[3] border-r-[1px] border-neutral-700 px-2">
           <p className="text-neutral-800 text-[22px] font-medium leading-[2.5rem]">
