@@ -1,32 +1,17 @@
 import React from "react";
 import AuthFrom from "../components/AuthFrom";
-import {
-  createAuthUserWithEmailAndPassword,
-  createUserDocumentFromAuth,
-} from "../firebase/firebase";
+import { useDispatch } from "react-redux";
+import { signup } from "../store/user/user.actions";
 
 const SignUp = () => {
+  const dispatch = useDispatch();
   const handleSubmit = async ({
     displayName,
     email,
     password,
     confirmPassword,
   }) => {
-    if (password !== confirmPassword) {
-      alert("User already registered");
-      return;
-    }
-    try {
-      const { user } = await createAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
-      await createUserDocumentFromAuth(user, {
-        courses: [{ id: "none", progress: null }],
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    dispatch(signup(displayName, email, password, confirmPassword));
   };
 
   return <AuthFrom onSignUp={true} handleSubmit={handleSubmit} />;

@@ -1,4 +1,4 @@
-import { LOGIN_USER } from "./user.types";
+import { GET_CURRENT_USER, LOGIN_USER } from "./user.types";
 
 const initialState = {
   auth: false,
@@ -7,7 +7,7 @@ const initialState = {
 
 export const userReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case LOGIN_USER: {
+    case GET_CURRENT_USER: {
       return {
         ...state,
         auth: true,

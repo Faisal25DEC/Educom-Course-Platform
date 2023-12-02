@@ -1,12 +1,50 @@
-import { createAuthUserWithEmailAndPassword } from "../../firebase/firebase";
+import {
+  createAuthUserWithEmailAndPassword,
+  createUserDocumentFromAuth,
+} from "../../firebase/firebase";
+import { toast } from "react-toastify";
+import { createAction } from "../utils";
+import { GET_CURRENT_USER } from "./user.types";
 
 export const signup =
-  ({ email, password }) =>
-  async (dispatch) => {
+  (displayName, email, password, confirmPassword) => async (dispatch) => {
+    if (password !== confirmPassword) {
+      toast.error("passwords don't match");
+      return;
+    }
     try {
-      const user = await createAuthUserWithEmailAndPassword(email, password);
-      console.log(user);
-    } catch (error) {
-      console.log(error);
+      const { user } = await createAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+      user.displayName = displayName;
+      const promise = createUserDocumentFromAuth(user, {
+        courses: [{ id: null, progress: null, review: null }],
+      });
+      toast.promise(promise, {
+        pending: "Please wait...",
+        success: "User added successfully",
+      });
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1000);
+    } catch (err) {
+      switch (err.code) {
+        case "auth/email-already-in-use": {
+          toast.error("User Already Registered");
+          break;
+        }
+        default: {
+          toast.error("Error creating user");
+        }
+      }
     }
   };
+
+export const getCurrentUser = (user) => (dispatch) => {
+  try {
+    dispatch(createAction(GET_CURRENT_USER, user));
+  } catch (error) {
+    toast.error("Error signing In");
+  }
+};

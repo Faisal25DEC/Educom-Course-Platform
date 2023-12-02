@@ -53,6 +53,7 @@ const AuthFrom = ({ onSignUp, handleSubmit }) => {
           placeholder="Enter Your Password"
           className="w-[100%] h-[3rem] p-2 rounded-md border-[1px] border-neutral-400"
           name="password"
+          autoComplete
           onChange={handleFormFieldChange}
         />
         {onSignUp && (

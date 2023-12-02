@@ -17,6 +17,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { v4 as uuid } from "uuid";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCyQoUwnPiLr_v0SdfHRqGz7KTUf3Vgvo4",
@@ -133,4 +134,14 @@ export const updateUserDocumentFromAuth = async (user, newDisplayName) => {
     console.log(res);
   });
   console.log("document updated");
+};
+
+export const setCourse = async (course) => {
+  const courseRef = doc(db, "courses", uuid() + Date.now());
+  try {
+    await setDoc(courseRef, course);
+    console.log("course updated");
+  } catch (err) {
+    console.log(err);
+  }
 };

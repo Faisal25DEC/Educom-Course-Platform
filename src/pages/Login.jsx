@@ -6,7 +6,7 @@ const Login = () => {
     await signInAuthUserWithEmailAndPassword(email, password);
   };
 
-  return <AuthFrom onSignUp={false} />;
+  return <AuthFrom onSignUp={false} handleSubmit={handleSubmit} />;
 };
 
 export default Login;
