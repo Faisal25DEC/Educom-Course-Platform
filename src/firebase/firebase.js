@@ -145,3 +145,18 @@ export const setCourse = async (course) => {
     console.log(err);
   }
 };
+
+export const updateDocumentById = async (
+  collectionName,
+  documentId,
+  newData
+) => {
+  const documentRef = doc(db, collectionName, documentId);
+
+  try {
+    await updateDoc(documentRef, newData);
+    console.log("Document successfully updated!");
+  } catch (error) {
+    console.error("Error updating document:", error);
+  }
+};

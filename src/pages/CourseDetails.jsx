@@ -1,13 +1,55 @@
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { db } from "../firebase/firebase";
+import { db, updateDocumentById } from "../firebase/firebase";
 import Rating from "react-rating";
 import { FaCalendar, FaCircle, FaGlobe, FaStar } from "react-icons/fa";
+import { FaCircleCheck } from "react-icons/fa6";
+import CourseAccordion from "../components/CourseAccordion";
+import { useSelector } from "react-redux";
+import { loadScript } from "../utils/script";
 
 const CourseDetails = () => {
+  const { currentUser } = useSelector((state) => state.userReducer);
   const { courseId } = useParams();
+
   const [course, setCourse] = useState({});
+  const [razorPay, setRazorPay] = useState(null);
+
+  const isEnrolled =
+    currentUser.courses.findIndex((ele) => ele.id === courseId) !== -1;
+
+  useEffect(() => {
+    const handlePayment = async () => {
+      const options = {
+        key: "rzp_test_XxnjNvE6sXYT54",
+        amount: Math.floor(course.price * 100),
+        currency: "INR",
+        description: "Payment for your service",
+        handler: async (response) => {
+          console.log(currentUser.courses);
+          const updatedData = {
+            ...currentUser,
+            courses: [
+              ...currentUser.courses,
+              { id: courseId, review: 0, progress: 0 },
+            ],
+          };
+
+          await updateDocumentById("users", currentUser.id, updatedData);
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      setRazorPay(rzp);
+    };
+
+    loadScript("https://checkout.razorpay.com/v1/checkout.js", () => {
+      // Call handlePayment when the script is loaded and the component mounts
+      handlePayment();
+    });
+  }, [course?.price]);
+
   useEffect(() => {
     const getCourse = async () => {
       try {
@@ -23,6 +65,8 @@ const CourseDetails = () => {
     };
     getCourse();
   }, [courseId]);
+
+  console.log(course?.syllabus);
 
   return (
     <div className="w-[100%] ">
@@ -101,7 +145,7 @@ const CourseDetails = () => {
         </div>
       </section>
       <section className="w-[80%] m-auto flex justify-between ">
-        <div className="pt-4 ">
+        <div className="pt-4 w-[70%]">
           <div className="flex flex-col gap-2 py-8">
             <h1 className="text-[28px] text-neutral-800 font-semibold">
               Course Pre-requisites
@@ -116,20 +160,42 @@ const CourseDetails = () => {
           <h1 className="text-[36px] text-neutral-800 font-semibold">
             Course Content
           </h1>
+          {course?.syllabus && (
+            <div>
+              {course.syllabus.map((content, idx) => {
+                return <CourseAccordion content={content} idx={idx} />;
+              })}
+            </div>
+          )}
         </div>
-        <div className="w-[24rem] flex flex-col justify-center gap-[12px] p-2">
+        <div className="w-[24rem] flex flex-col justify-center gap-[12px] p-2 h-[60vh]">
           <h1 className="text-[32px] text-neutral-900 font-medium">
             {course.name}
           </h1>
           <p className="text-[24px] text-neutral-900 font-medium">
             Rs. {course.price}/-
           </p>
-          <button className="mt-2 bg-neutral-800 text-[24px] font-medium rounded-[5rem] text-white border-none p-[10px] hover:bg-opacity-75">
-            Enroll Now
-          </button>
-          <button className="mt-2 border-[1px] border-neutral-800 text-[24px] font-medium rounded-[5rem] text-neutral-800 p-[10px] hover:bg-neutral-200">
-            Add To Cart
-          </button>
+          {isEnrolled && (
+            <p className="text-center text-[24px] font-bold flex gap-2 items-center justify-center">
+              <FaCircleCheck color="green" />
+              You Are Already Enrolled
+            </p>
+          )}
+          {!isEnrolled && (
+            <button
+              onClick={() => {
+                razorPay.open();
+              }}
+              className="mt-2 bg-neutral-800 text-[24px] font-medium rounded-[5rem] text-white border-none p-[10px] hover:bg-opacity-75"
+            >
+              Enroll Now
+            </button>
+          )}
+          {!isEnrolled && (
+            <button className="mt-2 border-[1px] border-neutral-800 text-[24px] font-medium rounded-[5rem] text-neutral-800 p-[10px] hover:bg-neutral-200">
+              Add To Cart
+            </button>
+          )}
           <p className="text-sm text-lightgray text-center">
             30 Days Money Back Guarantee
           </p>
