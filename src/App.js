@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { getCurrentUser } from "./store/user/user.actions";
 import Courses from "./pages/Courses";
 import CourseDetails from "./pages/CourseDetails";
+import Dashboard from "./pages/Dashboard";
 function App() {
   const dispatch = useDispatch();
 
@@ -48,6 +49,7 @@ function App() {
         <Route path="/register" element={<SignUp />} />
         <Route path="/courses" element={<Courses />} />
         <Route path={`/courses/:courseId`} element={<CourseDetails />} />
+        <Route path={`/dashboard/:userId`} element={<Dashboard />} />
       </Routes>
     </div>
   );

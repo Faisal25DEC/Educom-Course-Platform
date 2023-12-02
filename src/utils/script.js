@@ -9,9 +9,14 @@ export const loadScript = (src, callback) => {
 export const getReviewForCourse = (courses, courseId) => {
   const foundCourse = courses.find((course) => course.id === courseId);
 
-  return foundCourse.review; // Return the review if the course is found
+  return foundCourse.review;
 };
 export const checkReviewed = (courses, courseId) => {
   const foundCourse = courses.find((course) => course.id === courseId);
   return foundCourse.review !== 0;
+};
+
+export const getProgress = (courses, courseId) => {
+  const foundCourse = courses.find((course) => course.id === courseId);
+  return foundCourse.progress;
 };

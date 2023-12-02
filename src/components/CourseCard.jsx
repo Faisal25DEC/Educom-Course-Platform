@@ -2,8 +2,9 @@ import React from "react";
 import { FaCircle, FaStar } from "react-icons/fa";
 import Rating from "react-rating";
 import { Link } from "react-router-dom";
+import ProgressBar from "react-bootstrap/ProgressBar";
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ course, onDashboard, progress }) => {
   return (
     <Link to={`/courses/${course.id}`}>
       <div className="flex flex-col gap-2 min-h-[17rem]">
@@ -47,6 +48,7 @@ const CourseCard = ({ course }) => {
           </div>
           <p className="font-semibold">Rs. {course.price}</p>
         </div>
+        {onDashboard && <ProgressBar now={progress} label={`${progress}%`} />}
       </div>
     </Link>
   );
