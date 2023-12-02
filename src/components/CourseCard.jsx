@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const CourseCard = ({ course }) => {
   return (
-    <Link>
+    <Link to={`/courses/${course.id}`}>
       <div className="flex flex-col gap-2 min-h-[17rem]">
         <div>
           <img
@@ -23,9 +23,19 @@ const CourseCard = ({ course }) => {
                 <FaCircle color="#54ff54" className="w-2 h-2" /> Open
               </p>
             )}
+            {course.enrollmentStatus === "Closed" && (
+              <p className="text-[15px] text-neutral-500 flex gap-[4px] items-center px-6">
+                <FaCircle color="red" className="w-2 h-2" /> Closed
+              </p>
+            )}
+            {course.enrollmentStatus === "Progress" && (
+              <p className="text-[15px] text-neutral-500 flex gap-[4px] items-center px-6">
+                <FaCircle color="orange" className="w-2 h-2" /> In Progress
+              </p>
+            )}
           </div>
 
-          <div className="flex items-center ">
+          <div className="flex items-center gap-[1px]">
             <Rating
               initialRating={course.review}
               fractions={2}
@@ -33,7 +43,7 @@ const CourseCard = ({ course }) => {
               emptySymbol={<FaStar color="grey" />}
               readonly
             />
-            <p>{`(${course.reviewCount})`}</p>
+            <p className="pb-[4px]">{`(${course.reviewCount})`}</p>
           </div>
           <p className="font-semibold">Rs. {course.price}</p>
         </div>

@@ -8,7 +8,7 @@ const Navbar = () => {
     {
       id: 1,
       title: "Courses",
-      href: "/",
+      href: "/courses",
     },
     {
       id: 2,
@@ -21,12 +21,24 @@ const Navbar = () => {
   ];
   return (
     <div className="flex justify-between items-center w-[80%] m-auto py-6">
-      <Link to="/">
-        <div className="w-12 h-4 flex items-center gap-2">
-          <img src={Logo} alt="Logo" />
-          <span className="font-bold text-neutral-800">Educom</span>
+      <div className="flex items-center justify-between gap-4 w-[50%]">
+        <div>
+          <Link to="/">
+            <div className=" flex items-center gap-2">
+              <img src={Logo} alt="Logo" className="h-12 w-12" />
+              <span className="font-bold text-neutral-800">Educom</span>
+            </div>
+          </Link>
         </div>
-      </Link>
+
+        <div>
+          <input
+            type="text"
+            placeholder="Search For Courses"
+            className="w-[27rem] h-[2.5rem] p-2 rounded-md border-[1px] border-neutral-400 outline-none"
+          />
+        </div>
+      </div>
       {path !== "/login" && path !== "/register" && (
         <ul className="flex items-center gap-4 font-semibold cursor-pointer">
           {links.map((item) => (

@@ -15,6 +15,8 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getCurrentUser } from "./store/user/user.actions";
+import Courses from "./pages/Courses";
+import CourseDetails from "./pages/CourseDetails";
 function App() {
   const dispatch = useDispatch();
 
@@ -27,10 +29,8 @@ function App() {
         const data = getUserDocumentFromAuth(user);
         data.then((res) => {
           console.log(res.data());
-          onSnapshot(doc(db, "users", res.id), (doc) => {
-            doc.exists() &&
-              dispatch(getCurrentUser({ ...res.data(), id: res.id }));
-          });
+
+          dispatch(getCurrentUser({ ...res.data(), id: res.id }));
         });
         console.log(user);
       }
@@ -46,6 +46,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path={`/courses/:courseId`} element={<CourseDetails />} />
       </Routes>
     </div>
   );
