@@ -39,6 +39,7 @@ const Navbar = () => {
   ];
 
   useEffect(() => {
+    sidebarRef.current.style.left = "-100%";
     const filterCourses = () => {
       const filteredCoursesData = allCourses.filter((course) => {
         return course.name.toLowerCase().includes(inputString);
