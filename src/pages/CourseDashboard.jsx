@@ -63,6 +63,15 @@ const CourseDetails = () => {
       unSub && unSub();
     };
   }, [currentUser?.id, dispatch]);
+  useEffect(() => {
+    const unSub = onSnapshot(doc(db, "courses", courseId), (doc) => {
+      doc.exists() && setCourse(doc.data());
+    });
+
+    return () => {
+      unSub();
+    };
+  }, [courseId]);
 
   useEffect(() => {
     const getCourse = async () => {
@@ -121,7 +130,9 @@ const CourseDetails = () => {
                       const updatedData = {
                         ...course,
                         review:
-                          (course.review - userReview + value) /
+                          (course.review * course.reviewCount -
+                            userReview +
+                            value) /
                           course.reviewCount,
                       };
 
@@ -207,7 +218,7 @@ const CourseDetails = () => {
               )}
             </div>
           </div>
-          <div className=" w-[90%] md:[24rem] h-[30rem]  flex justify-start items-end">
+          <div className=" w-[90%] md:w-[24rem] h-[30rem]  flex justify-start items-end">
             <img
               src={course?.thumbnail}
               alt="course-thumbnail"
@@ -249,7 +260,7 @@ const CourseDetails = () => {
             </div>
           )}
         </div>
-        <div className="w-[100%] md:max-w-[24rem] flex flex-col justify-center gap-[24px] md:gap-[12px] p-2 max-h-[60vh]">
+        <div className="w-[100%] md:max-w-[24rem] flex flex-col justify-center gap-[24px] md:gap-[12px] p-2 h-[min-content]">
           <h1 className="text-[32px] text-center md:text-left text-neutral-900 font-medium">
             {course.name}
           </h1>

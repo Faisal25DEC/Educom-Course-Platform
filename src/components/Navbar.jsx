@@ -2,10 +2,14 @@ import Logo from "../assets/logo.png";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../store/user/user.actions";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaHamburger } from "react-icons/fa";
+import { debounce } from "../utils/script";
 const Navbar = () => {
   const path = useLocation().pathname;
+  const { allCourses } = useSelector((state) => state.coursesReducer);
+  const [inputString, setInputString] = useState("");
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const { auth, currentUser } = useSelector((state) => state.userReducer);
   const sidebarRef = useRef(null);
   const dispatch = useDispatch();
@@ -33,9 +37,21 @@ const Navbar = () => {
       title: "Contact",
     },
   ];
+
+  useEffect(() => {
+    const filterCourses = () => {
+      const filteredCoursesData = allCourses.filter((course) => {
+        return course.name.toLowerCase().includes(inputString);
+      });
+      setFilteredCourses(filteredCoursesData);
+    };
+    const debounceFunc = debounce(filterCourses, 2000);
+    debounceFunc(allCourses);
+  }, [inputString, allCourses]);
+
   return (
     <div className="flex justify-between items-center w-[90%] md:w-[80%] m-auto py-6">
-      <div className="flex items-center gap-4 w-[80%] md:w-[50%]">
+      <div className="flex items-center gap-4 w-[90%] md:w-[50%]">
         <div>
           <Link to="/">
             <div className=" flex items-center gap-2">
@@ -47,12 +63,45 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="max-w-[100%] md:w-[70%] ">
+        <div className="w-[100%] md:w-[70%] relative">
           <input
+            onChange={(e) => {
+              setInputString(e.target.value);
+            }}
+            value={inputString}
             type="text"
             placeholder="Search For Courses"
             className="w-[100%] h-[2.5rem] p-2 rounded-md border-[1px] border-neutral-400 outline-none"
           />
+          {filteredCourses.length > 0 && inputString && (
+            <div className="absolute top-[2.5rem] w-[100%] bg-white overflow-y-scroll h-[60vh] flex flex-col gap-4">
+              {filteredCourses.map((course) => {
+                return (
+                  <Link
+                    to={`/courses/${course.id}`}
+                    onClick={() => {
+                      setInputString("");
+                    }}
+                  >
+                    <div className="flex  items-center gap-4 py-2 px-4">
+                      <div className="w-[12rem] h-[6rem]">
+                        <img
+                          src={course.thumbnail}
+                          alt=""
+                          className="min-w-[12rem] min-h-[6rem] object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h1 className="text-[14px] text-neutral-900">
+                          {course.name}
+                        </h1>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}{" "}
+            </div>
+          )}
         </div>
       </div>
       {path !== "/login" && path !== "/register" && (
@@ -77,7 +126,7 @@ const Navbar = () => {
             <Link to="/login" onClick={setSidebar}>
               {" "}
               <button className="px-3 py-2 text-white text-center bg-[#3981ed] rounded-md  ">
-                Login
+                Login``
               </button>
             </Link>
           )}

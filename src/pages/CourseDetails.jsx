@@ -70,6 +70,9 @@ const CourseDetails = () => {
 
           await updateDocumentById("courses", courseId, courseUpdate);
           await updateDocumentById("users", currentUser.id, updatedData);
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
         },
       };
 
@@ -140,7 +143,9 @@ const CourseDetails = () => {
                       const updatedData = {
                         ...course,
                         review:
-                          (course.review - userReview + value) /
+                          (course.review * course.reviewCount -
+                            userReview +
+                            value) /
                           course.reviewCount,
                       };
                       console.log(userReview);
@@ -228,7 +233,7 @@ const CourseDetails = () => {
               )}
             </div>
           </div>
-          <div className=" w-[90%] md:[24rem] h-[30rem]  flex justify-start items-end">
+          <div className=" w-[90%] md:w-[24rem] h-[30rem]  flex justify-start items-end">
             <img
               src={course?.thumbnail}
               alt="course-thumbnail"
@@ -261,11 +266,11 @@ const CourseDetails = () => {
             </div>
           )}
         </div>
-        <div className="w-[100%] md:max-w-[24rem] flex flex-col justify-center gap-[24px] md:gap-[12px] p-2 max-h-[60vh]">
-          <h1 className="text-[32px] text-center md:text-left text-neutral-900 font-medium">
+        <div className="w-[100%] md:max-w-[24rem] flex flex-col justify-center md:justify-start gap-[24px] md:gap-[12px] p-2 max-h-[min-content]">
+          <h1 className="text-[32px] flex justify-center md:justify-start text-neutral-900 font-medium">
             {course.name}
           </h1>
-          <p className="text-[24px] text-center md:text-left text-neutral-900 font-medium">
+          <p className="text-[24px] justify-center md:justify-start text-neutral-900 font-medium">
             Rs. {course.price}/-
           </p>
           {isEnrolled && (
@@ -277,6 +282,10 @@ const CourseDetails = () => {
           {!isEnrolled && (
             <button
               onClick={() => {
+                if (course?.enrollmentStatus === "Closed") {
+                  toast.error("Course Enrollments are Closed now");
+                  return;
+                }
                 if (!currentUser || !course) {
                   toast.error("Couldn't authorize user");
                   return;
@@ -285,7 +294,9 @@ const CourseDetails = () => {
               }}
               className="mt-2 bg-neutral-800 text-[24px] font-medium rounded-[5rem] text-white border-none p-[10px] hover:bg-opacity-75"
             >
-              Enroll Now
+              {course?.enrollmentStatus === "Closed"
+                ? "Enrollments Closed"
+                : "Enroll Now"}
             </button>
           )}
           {!isEnrolled && (
