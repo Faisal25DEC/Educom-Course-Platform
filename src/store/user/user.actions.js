@@ -1,10 +1,11 @@
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
+  signOutUser,
 } from "../../firebase/firebase";
 import { toast } from "react-toastify";
 import { createAction } from "../utils";
-import { GET_CURRENT_USER } from "./user.types";
+import { GET_CURRENT_USER, SIGN_OUT_USER } from "./user.types";
 
 export const signup =
   (displayName, email, password, confirmPassword) => async (dispatch) => {
@@ -46,5 +47,14 @@ export const getCurrentUser = (user) => (dispatch) => {
     dispatch(createAction(GET_CURRENT_USER, user));
   } catch (error) {
     toast.error("Error signing In");
+  }
+};
+
+export const signOut = () => async (dispatch) => {
+  try {
+    await signOutUser();
+    dispatch(createAction(SIGN_OUT_USER));
+  } catch (error) {
+    console.log(error);
   }
 };

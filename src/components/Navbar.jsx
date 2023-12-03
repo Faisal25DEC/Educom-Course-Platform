@@ -1,9 +1,23 @@
 import Logo from "../assets/logo.png";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { signOut } from "../store/user/user.actions";
+import { useRef } from "react";
+import { FaHamburger } from "react-icons/fa";
 const Navbar = () => {
   const path = useLocation().pathname;
   const { auth, currentUser } = useSelector((state) => state.userReducer);
+  const sidebarRef = useRef(null);
+  const dispatch = useDispatch();
+
+  const setSidebar = () => {
+    if (sidebarRef.current.style.left === "0px") {
+      sidebarRef.current.style.left = "-100%";
+    } else {
+      sidebarRef.current.style.left = "0px";
+    }
+  };
+
   const links = [
     {
       id: 1,
@@ -20,32 +34,39 @@ const Navbar = () => {
     },
   ];
   return (
-    <div className="flex justify-between items-center w-[80%] m-auto py-6">
-      <div className="flex items-center justify-between gap-4 w-[50%]">
+    <div className="flex justify-between items-center w-[90%] md:w-[80%] m-auto py-6">
+      <div className="flex items-center gap-4 w-[80%] md:w-[50%]">
         <div>
           <Link to="/">
             <div className=" flex items-center gap-2">
               <img src={Logo} alt="Logo" className="h-12 w-12" />
-              <span className="font-bold text-neutral-800">Educom</span>
+              <span className="font-bold text-neutral-800 hidden md:block ">
+                Educom
+              </span>
             </div>
           </Link>
         </div>
 
-        <div>
+        <div className="max-w-[100%] md:w-[70%] ">
           <input
             type="text"
             placeholder="Search For Courses"
-            className="w-[27rem] h-[2.5rem] p-2 rounded-md border-[1px] border-neutral-400 outline-none"
+            className="w-[100%] h-[2.5rem] p-2 rounded-md border-[1px] border-neutral-400 outline-none"
           />
         </div>
       </div>
       {path !== "/login" && path !== "/register" && (
-        <ul className="flex items-center gap-4 font-semibold cursor-pointer">
+        <ul
+          ref={sidebarRef}
+          className="z-[1] md:z-0 transition-all flex flex-col md:flex-row px-24 md:px-0 justify-center md:justify-start items-center gap-4 font-semibold cursor-pointer fixed md:static h-[100vh] md:h-[auto] bg-white md:bg-transparent top-0 left-[-100%] "
+        >
           {links.map((item) => (
-            <Link to={item.href}>{item.title}</Link>
+            <Link to={item.href} onClick={setSidebar}>
+              {item.title}
+            </Link>
           ))}
           {!auth && (
-            <Link to="/register">
+            <Link to="/register" onClick={setSidebar}>
               <button className="p-2 text-neutral-800 text-center border-[1px] border-[#3981ed] rounded-md">
                 Register
               </button>
@@ -53,7 +74,7 @@ const Navbar = () => {
           )}
 
           {!auth && (
-            <Link to="/login">
+            <Link to="/login" onClick={setSidebar}>
               {" "}
               <button className="px-3 py-2 text-white text-center bg-[#3981ed] rounded-md  ">
                 Login
@@ -61,17 +82,31 @@ const Navbar = () => {
             </Link>
           )}
           {auth && (
-            <Link to={`/dashboard/${currentUser.id}`}>
+            <Link onClick={setSidebar} to={`/dashboard/${currentUser.id}`}>
               {currentUser.displayName}
             </Link>
           )}
           {auth && (
-            <button className="px-3 py-2 text-white text-center bg-[#3981ed] rounded-md  ">
+            <button
+              onClick={async () => {
+                await dispatch(signOut());
+                setSidebar();
+              }}
+              className="px-3 py-2 text-white text-center bg-[#3981ed] rounded-md  "
+            >
               Logout
             </button>
           )}
         </ul>
       )}
+      <div
+        className="block md:hidden"
+        onClick={() => {
+          setSidebar();
+        }}
+      >
+        <FaHamburger />
+      </div>
     </div>
   );
 };

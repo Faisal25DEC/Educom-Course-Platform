@@ -21,7 +21,7 @@ const Home = () => {
         <h1 className="text-center text-neutral-900 font-semibold text-[48px]">
           Top Courses
         </h1>
-        <div className="grid grid-cols-4 gap-4 w-[100%] gap-y-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-[100%] gap-y-12">
           {allCourses?.map((course, index) => {
             if (index < 4) {
               return <CourseCard course={course} />;

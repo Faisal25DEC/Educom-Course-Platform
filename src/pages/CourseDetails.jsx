@@ -102,11 +102,11 @@ const CourseDetails = () => {
   return (
     <div className="w-[100%] ">
       <section
-        className={`w-[100%] bg-[#454655] min-h-[40vh] max-h-[70vh] text-white`}
+        className={`w-[100%] bg-[#454655] min-h-[40vh] max-h-[max-content] md:max-h-[70vh] text-white`}
       >
-        <div className="w-[80%] m-auto flex justify-between items-end h-[100%] ">
-          <div className="flex flex-col gap-[10px] pb-12 w-[70%]">
-            <h1 className="text-[48px] font-semibold leading-normal ">
+        <div className="w-[90%] md:w-[80%] m-auto flex flex-col-reverse md:flex-row  justify-between items-center md:items-end h-[100%] ">
+          <div className="flex flex-col gap-[10px] pt-12 pb-12 md:pt-0 w-[90%] md:w-[70%]">
+            <h1 className="text-[30px] md:text-[48px] font-semibold leading-normal ">
               {course?.name}
             </h1>
             <p className="text-neutral-200 font-light  text-[24px]">
@@ -143,6 +143,8 @@ const CourseDetails = () => {
                           (course.review - userReview + value) /
                           course.reviewCount,
                       };
+                      console.log(userReview);
+                      console.log(updatedData);
 
                       await updateDocumentById(
                         "courses",
@@ -226,7 +228,7 @@ const CourseDetails = () => {
               )}
             </div>
           </div>
-          <div className=" w-[24rem] h-[30rem] flex justify-start items-end">
+          <div className=" w-[90%] md:[24rem] h-[30rem]  flex justify-start items-end">
             <img
               src={course?.thumbnail}
               alt="course-thumbnail"
@@ -235,9 +237,9 @@ const CourseDetails = () => {
           </div>
         </div>
       </section>
-      <section className="w-[80%] m-auto flex justify-between ">
-        <div className="pt-4 w-[70%]">
-          <div className="flex flex-col gap-2 py-8">
+      <section className="w-[80%] m-auto flex flex-col-reverse md:flex-row  justify-between ">
+        <div className="pt-4 w-[100%] md:w-[70%]">
+          <div className="flex flex-col gap-2 py-8 w-[100%]">
             <h1 className="text-[28px] text-neutral-800 font-semibold">
               Course Pre-requisites
             </h1>
@@ -259,11 +261,11 @@ const CourseDetails = () => {
             </div>
           )}
         </div>
-        <div className="w-[24rem] flex flex-col justify-center gap-[12px] p-2 h-[60vh]">
-          <h1 className="text-[32px] text-neutral-900 font-medium">
+        <div className="w-[100%] md:max-w-[24rem] flex flex-col justify-center gap-[24px] md:gap-[12px] p-2 max-h-[60vh]">
+          <h1 className="text-[32px] text-center md:text-left text-neutral-900 font-medium">
             {course.name}
           </h1>
-          <p className="text-[24px] text-neutral-900 font-medium">
+          <p className="text-[24px] text-center md:text-left text-neutral-900 font-medium">
             Rs. {course.price}/-
           </p>
           {isEnrolled && (

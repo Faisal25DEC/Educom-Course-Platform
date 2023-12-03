@@ -56,7 +56,9 @@ const CourseCard = ({ course, onDashboard, progress }) => {
           </div>
           <p className="font-semibold">Rs. {course.price}</p>
         </div>
-        {onDashboard && <ProgressBar now={progress} label={`${progress}%`} />}
+        {onDashboard && (
+          <ProgressBar now={progress} label={`${progress.toFixed(2)}%`} />
+        )}
       </div>
     </Link>
   );

@@ -8,6 +8,7 @@ export const loadScript = (src, callback) => {
 
 export const getReviewForCourse = (courses, courseId) => {
   const foundCourse = courses.find((course) => course.id === courseId);
+  console.log(foundCourse);
 
   return foundCourse.review === null ? 0 : foundCourse.review;
 };

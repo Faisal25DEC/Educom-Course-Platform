@@ -29,7 +29,9 @@ function CourseAccordion({ content, idx, onDashboard, updateUser }) {
             <CustomToggle eventKey={idx}>
               Week {idx + 1} <RiArrowDropDownLine className="text-[24px]" />
             </CustomToggle>
-            <p>{content.topics.length} lectures</p>
+            <p className="flex items-center gap-2 text-[14px]">
+              {content.topics.length} <span>lectures</span>
+            </p>
           </Card.Header>
           <Accordion.Collapse eventKey={idx}>
             <Card.Body>

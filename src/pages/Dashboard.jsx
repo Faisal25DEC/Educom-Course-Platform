@@ -45,7 +45,7 @@ const Dashboard = () => {
           </h1>
         </div>
       </div>
-      <div className="w-[80%] grid grid-cols-4 gap-4 m-auto py-4">
+      <div className="w-[80%] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 m-auto py-4">
         {courses?.map((course) => {
           if (course) {
             return (

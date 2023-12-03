@@ -9,9 +9,9 @@ const Hero = ({ onCourses }) => {
   const { auth, currentUser } = useSelector((state) => state.userReducer);
   return (
     <div
-      className={`flex ${
-        onCourses && "flex-row-reverse"
-      } items-center justify-between w-[80%] m-auto h-[90vh]`}
+      className={` flex ${
+        onCourses && "md:flex-row-reverse"
+      } flex-col md:flex-row items-center md:justify-between w-[90%] md:w-[80%] m-auto h-[max-content] md:h-[90vh]`}
     >
       <div
         className={`${
