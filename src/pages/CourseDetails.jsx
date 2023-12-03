@@ -72,7 +72,7 @@ const CourseDetails = () => {
           await updateDocumentById("users", currentUser.id, updatedData);
           setTimeout(() => {
             window.location.reload();
-          }, 3000);
+          }, 1500);
         },
       };
 
