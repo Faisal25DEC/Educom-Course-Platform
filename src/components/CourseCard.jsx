@@ -3,10 +3,18 @@ import { FaCircle, FaStar } from "react-icons/fa";
 import Rating from "react-rating";
 import { Link } from "react-router-dom";
 import ProgressBar from "react-bootstrap/ProgressBar";
+import { useSelector } from "react-redux";
 
 const CourseCard = ({ course, onDashboard, progress }) => {
+  const { currentUser } = useSelector((state) => state.userReducer);
   return (
-    <Link to={`/courses/${course.id}`}>
+    <Link
+      to={
+        onDashboard
+          ? `/dashboard/${currentUser.id}/${course.id}`
+          : `/courses/${course.id}`
+      }
+    >
       <div className="flex flex-col gap-2 min-h-[17rem]">
         <div>
           <img

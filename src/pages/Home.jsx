@@ -26,6 +26,7 @@ const Home = () => {
             if (index < 4) {
               return <CourseCard course={course} />;
             }
+            return null;
           })}
         </div>
       </div>

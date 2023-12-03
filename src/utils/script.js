@@ -9,14 +9,46 @@ export const loadScript = (src, callback) => {
 export const getReviewForCourse = (courses, courseId) => {
   const foundCourse = courses.find((course) => course.id === courseId);
 
-  return foundCourse.review;
+  return foundCourse.review === null ? 0 : foundCourse.review;
 };
 export const checkReviewed = (courses, courseId) => {
   const foundCourse = courses.find((course) => course.id === courseId);
-  return foundCourse.review !== 0;
+  return foundCourse.review !== (null || 0);
 };
 
 export const getProgress = (courses, courseId) => {
   const foundCourse = courses.find((course) => course.id === courseId);
   return foundCourse.progress;
+};
+
+export const getSyllabus = (syllabus) => {
+  const syllabusCopy = syllabus.map((s) => ({
+    ...s,
+    topics: s.topics.map((topic) => ({ title: topic, done: false })),
+  }));
+
+  console.log(syllabusCopy);
+  return syllabusCopy;
+};
+
+export const getUserCourseSyllabus = (courses, courseId) => {
+  const foundCourse = courses.find((course) => course.id === courseId);
+  return foundCourse;
+};
+
+export const getCourseProgress = (courses, courseId) => {
+  const syllabus = getUserCourseSyllabus(courses, courseId).syllabus;
+  const total = syllabus.reduce((acc, week) => {
+    return acc + week.topics.length;
+  }, 0);
+  const count = syllabus.reduce((accumulator, week) => {
+    return (
+      accumulator +
+      week.topics.reduce((weekTotal, topic) => {
+        return weekTotal + (topic.done ? 1 : 0);
+      }, 0)
+    );
+  }, 0);
+
+  return (count / total) * 100;
 };

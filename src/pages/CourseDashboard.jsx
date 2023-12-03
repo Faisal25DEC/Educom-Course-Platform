@@ -4,84 +4,65 @@ import { useParams } from "react-router-dom";
 import { db, updateDocumentById } from "../firebase/firebase";
 import Rating from "react-rating";
 import { FaCalendar, FaCircle, FaGlobe, FaStar } from "react-icons/fa";
-import { FaCircleCheck } from "react-icons/fa6";
+
 import CourseAccordion from "../components/CourseAccordion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   checkReviewed,
+  getCourseProgress,
+  getProgress,
   getReviewForCourse,
-  getSyllabus,
-  loadScript,
+  getUserCourseSyllabus,
 } from "../utils/script";
 import { toast } from "react-toastify";
+
+import ProgressBar from "react-bootstrap/ProgressBar";
+import { getCurrentUser } from "../store/user/user.actions";
 
 const CourseDetails = () => {
   const { currentUser } = useSelector((state) => state.userReducer);
   const { courseId } = useParams();
 
+  const dispatch = useDispatch();
+
   const [course, setCourse] = useState({});
-  const [razorPay, setRazorPay] = useState(null);
-  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [currentCourse, setCurrentCourse] = useState([]);
+
+  const isEnrolled =
+    currentUser?.courses.findIndex((ele) => ele.id === courseId) !== -1;
+
+  const updateUser = async () => {
+    try {
+      currentCourse.progress =
+        currentUser?.courses &&
+        getCourseProgress(currentUser?.courses, courseId);
+      await updateDocumentById("users", currentUser?.id, currentUser);
+    } catch (err) {
+      toast.error("error updating user");
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    setIsEnrolled(
-      currentUser?.courses.findIndex((ele) => ele.id === courseId) !== -1
-    );
-  }, [course, currentUser?.courses, courseId]);
+    const res =
+      currentUser?.courses &&
+      getUserCourseSyllabus(currentUser?.courses, courseId);
+    setCurrentCourse(res);
+  }, [currentUser, courseId]);
 
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "courses", courseId), (doc) => {
-      doc.exists() && setCourse(doc.data());
-    });
+    let unSub;
+    if (currentUser?.id) {
+      unSub = onSnapshot(doc(db, "users", currentUser?.id), (doc) => {
+        doc.exists() &&
+          dispatch(getCurrentUser({ ...doc.data(), id: currentUser?.id }));
+      });
+    }
 
     return () => {
-      unSub();
+      unSub && unSub();
     };
-  }, [courseId]);
-
-  useEffect(() => {
-    const handlePayment = async () => {
-      const options = {
-        key: "rzp_test_XxnjNvE6sXYT54",
-        amount: Math.floor(course.price * 100),
-        currency: "INR",
-        description: "Payment for your service",
-        handler: async (response) => {
-          const updatedData = {
-            ...(currentUser || {}), // Ensure currentUser is an object or use an empty object
-            courses: [
-              ...(currentUser?.courses || []), // Ensure courses is an array or use an empty array
-              {
-                id: courseId,
-                review: 0,
-                progress: 0,
-                syllabus: getSyllabus([...(course.syllabus || [])]),
-              },
-            ],
-          };
-
-          const courseUpdate = {
-            ...(course || {}), // Ensure course is an object or use an empty object
-            students: [
-              ...(course.students || []), // Ensure students is an array or use an empty array
-              { name: currentUser.displayName, email: currentUser.email },
-            ],
-          };
-
-          await updateDocumentById("courses", courseId, courseUpdate);
-          await updateDocumentById("users", currentUser.id, updatedData);
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-      setRazorPay(rzp);
-    };
-
-    loadScript("https://checkout.razorpay.com/v1/checkout.js", () => {
-      // Call handlePayment when the script is loaded and the component mounts
-      handlePayment();
-    });
-  }, [course?.price, currentUser, course, courseId]);
+  }, [currentUser?.id, dispatch]);
 
   useEffect(() => {
     const getCourse = async () => {
@@ -251,11 +232,20 @@ const CourseDetails = () => {
           <h1 className="text-[36px] text-neutral-800 font-semibold">
             Course Content
           </h1>
-          {course?.syllabus && (
+          {currentUser && currentUser?.courses && (
             <div>
-              {course.syllabus.map((content, idx) => {
-                return <CourseAccordion content={content} idx={idx} />;
-              })}
+              {currentCourse?.syllabus &&
+                currentCourse?.syllabus.map((content, idx) => {
+                  return (
+                    <CourseAccordion
+                      key={idx}
+                      content={content}
+                      idx={idx}
+                      onDashboard
+                      updateUser={updateUser}
+                    />
+                  );
+                })}
             </div>
           )}
         </div>
@@ -266,30 +256,18 @@ const CourseDetails = () => {
           <p className="text-[24px] text-neutral-900 font-medium">
             Rs. {course.price}/-
           </p>
-          {isEnrolled && (
-            <p className="text-center text-[24px] font-bold flex gap-2 items-center justify-center">
-              <FaCircleCheck color="green" />
-              You Are Already Enrolled
-            </p>
-          )}
-          {!isEnrolled && (
-            <button
-              onClick={() => {
-                if (!currentUser || !course) {
-                  toast.error("Couldn't authorize user");
-                  return;
-                }
-                razorPay.open();
-              }}
-              className="mt-2 bg-neutral-800 text-[24px] font-medium rounded-[5rem] text-white border-none p-[10px] hover:bg-opacity-75"
-            >
-              Enroll Now
-            </button>
-          )}
-          {!isEnrolled && (
-            <button className="mt-2 border-[1px] border-neutral-800 text-[24px] font-medium rounded-[5rem] text-neutral-800 p-[10px] hover:bg-neutral-200">
-              Add To Cart
-            </button>
+
+          <p className="text-center text-[14px] font-bold flex gap-2 items-center justify-center">
+            <FaCalendar /> {course.schedule}
+          </p>
+
+          {currentUser?.courses && (
+            <ProgressBar
+              now={getProgress(currentUser?.courses, courseId)}
+              label={`${getProgress(currentUser?.courses, courseId).toFixed(
+                2
+              )}%`}
+            />
           )}
           <p className="text-sm text-lightgray text-center">
             30 Days Money Back Guarantee

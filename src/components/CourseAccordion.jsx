@@ -14,7 +14,13 @@ function CustomToggle({ children, eventKey }) {
   );
 }
 
-function CourseAccordion({ content, idx }) {
+function CourseAccordion({ content, idx, onDashboard, updateUser }) {
+  const handleInputChange = (e, topic) => {
+    topic.done = e.target.checked;
+    updateUser();
+    console.log(content);
+  };
+
   return (
     <div className="bg-[#1f1f1f] w-[100%]">
       <Accordion defaultActiveKey="0">
@@ -27,13 +33,30 @@ function CourseAccordion({ content, idx }) {
           </Card.Header>
           <Accordion.Collapse eventKey={idx}>
             <Card.Body>
-              {content.topics.map((topic, index) => {
-                return (
-                  <p className="py-2 font-medium text-neutral-900 ">
-                    {index + 1}. {topic}
-                  </p>
-                );
-              })}{" "}
+              {onDashboard
+                ? content.topics.map((topic, index) => {
+                    return (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={topic.done}
+                          onChange={(e) => {
+                            handleInputChange(e, topic);
+                          }}
+                        />
+                        <p className="py-2 font-medium text-neutral-900 ">
+                          {topic.title}
+                        </p>
+                      </div>
+                    );
+                  })
+                : content.topics.map((topic, index) => {
+                    return (
+                      <p className="py-2 font-medium text-neutral-900 ">
+                        {index + 1}. {topic}
+                      </p>
+                    );
+                  })}{" "}
             </Card.Body>
           </Accordion.Collapse>
         </Card>
