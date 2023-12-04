@@ -30,7 +30,7 @@ const AuthFrom = ({ onSignUp, handleSubmit }) => {
           e.preventDefault();
           handleSubmit(formData);
         }}
-        className="flex flex-col items-center justify-center w-[25%] gap-4 "
+        className="flex flex-col items-center justify-center w-[90%] md:w-[50%] lg:w-[25%] gap-4 "
       >
         {onSignUp && (
           <input
