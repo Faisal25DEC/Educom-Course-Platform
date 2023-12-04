@@ -19,8 +19,13 @@ import Dashboard from "./pages/Dashboard";
 import CourseDashboard from "./pages/CourseDashboard";
 function App() {
   const dispatch = useDispatch();
+  const [authState, setAuthState] = useState(true);
 
   const { auth } = useSelector((state) => state.userReducer);
+
+  useEffect(() => {
+    setAuthState(auth);
+  }, [auth]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChangedListener(async (user) => {
@@ -48,18 +53,18 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
-        <Route path="/courses" element={auth ? <Courses /> : <Login />} />
+        <Route path="/courses" element={authState ? <Courses /> : <Login />} />
         <Route
           path={`/courses/:courseId`}
-          element={auth ? <CourseDetails /> : <Login />}
+          element={authState ? <CourseDetails /> : <Login />}
         />
         <Route
           path={`/dashboard/:userId`}
-          element={auth ? <Dashboard /> : <Login />}
+          element={authState ? <Dashboard /> : <Login />}
         />
         <Route
           path={`/dashboard/:userId/:courseId`}
-          element={auth ? <CourseDashboard /> : <Login />}
+          element={authState ? <CourseDashboard /> : <Login />}
         />
       </Routes>
     </div>
