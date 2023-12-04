@@ -21,12 +21,6 @@ function App() {
   const dispatch = useDispatch();
   const [authState, setAuthState] = useState(true);
 
-  const { auth } = useSelector((state) => state.userReducer);
-
-  useEffect(() => {
-    setAuthState(auth);
-  }, [auth]);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChangedListener(async (user) => {
       if (user) {
@@ -40,6 +34,8 @@ function App() {
           dispatch(getCurrentUser({ ...res.data(), id: res.id }));
         });
         console.log(user);
+      } else {
+        setAuthState(false);
       }
     });
 
