@@ -10,7 +10,7 @@ import {
   getUserDocumentFromAuth,
   onAuthStateChangedListener,
 } from "./firebase/firebase";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "./store/user/user.actions";
 import Courses from "./pages/Courses";
