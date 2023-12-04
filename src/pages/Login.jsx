@@ -9,7 +9,7 @@ const Login = () => {
       window.location.href = "/";
     } catch (err) {
       switch (err.code) {
-        case "auth/wrong-password":
+        case "auth/wrong-password" || "auth/invalid-credential":
           toast.error("Incorrect password for user");
           break;
         case "auth/user-not-found":
