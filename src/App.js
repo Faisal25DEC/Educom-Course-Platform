@@ -11,12 +11,13 @@ import {
   onAuthStateChangedListener,
 } from "./firebase/firebase";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getCurrentUser } from "./store/user/user.actions";
 import Courses from "./pages/Courses";
 import CourseDetails from "./pages/CourseDetails";
 import Dashboard from "./pages/Dashboard";
 import CourseDashboard from "./pages/CourseDashboard";
+import Footer from "./components/Footer";
 function App() {
   const dispatch = useDispatch();
   const [authState, setAuthState] = useState(true);
@@ -63,6 +64,7 @@ function App() {
           element={authState ? <CourseDashboard /> : <Login />}
         />
       </Routes>
+      <Footer />
     </div>
   );
 }
