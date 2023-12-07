@@ -38,7 +38,7 @@ function CourseAccordion({ content, idx, onDashboard, updateUser }) {
               {onDashboard
                 ? content.topics.map((topic, index) => {
                     return (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2" key={index}>
                         <input
                           type="checkbox"
                           checked={topic.done}
@@ -54,7 +54,10 @@ function CourseAccordion({ content, idx, onDashboard, updateUser }) {
                   })
                 : content.topics.map((topic, index) => {
                     return (
-                      <p className="py-2 font-medium text-neutral-900 ">
+                      <p
+                        className="py-2 font-medium text-neutral-900 "
+                        key={index}
+                      >
                         {index + 1}. {topic}
                       </p>
                     );

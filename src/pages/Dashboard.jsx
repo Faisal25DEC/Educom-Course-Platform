@@ -50,6 +50,7 @@ const Dashboard = () => {
           if (course) {
             return (
               <CourseCard
+                key={course.id}
                 course={course}
                 onDashboard
                 progress={getProgress(currentUser?.courses, course.id)}
