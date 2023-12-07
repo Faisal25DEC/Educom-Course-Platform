@@ -27,7 +27,7 @@ const Footer = () => {
             </button>
           </div>
         </div>
-        <div className="flex gap-[4rem] md:gap-[8rem] items-start justify-center md:justify-start">
+        <div className="flex gap-[2rem] md:gap-[8rem] mt-2 md:mt-0 items-start justify-center md:justify-start pl-4 md:pl-0">
           <div className="flex flex-col gap-4">
             <h1 className="text-[14px] font-semibold text-white">Pages</h1>
             <p className="text-neutral-200 font-light text-[14px]">Home</p>
@@ -64,7 +64,7 @@ const Footer = () => {
       </div>
       <div
         className=" 
-        pr-12 flex flex-col items-end justify-start gap-[0.85rem]"
+        md:pr-12 flex flex-col items-end justify-start gap-[0.85rem] pb-6"
       >
         <div className="w-[100%] flex items-center gap-4  justify-center md:justify-end md:pr-[5.5rem] mt-8 md:mt-0">
           <div>
@@ -80,7 +80,7 @@ const Footer = () => {
             <FaFacebook className="text-white w-6 h-6" />
           </div>
         </div>
-        <p className="text-neutral-200 w-[100%] flex justify-center md:justify-end">
+        <p className="text-neutral-200 w-[100%] text-center md:text-left flex justify-center md:justify-end">
           © 2023 Educom. All Rights Reserved
         </p>
       </div>

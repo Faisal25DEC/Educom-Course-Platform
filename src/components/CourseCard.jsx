@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import { useSelector } from "react-redux";
 
-const CourseCard = ({ course, onDashboard, progress }) => {
+const CourseCard = ({ course, onDashboard, progress, userReview }) => {
   const { currentUser } = useSelector((state) => state.userReducer);
   return (
     <Link
@@ -44,18 +44,35 @@ const CourseCard = ({ course, onDashboard, progress }) => {
             )}
           </div>
 
-          <div className="flex items-center gap-[1px]">
-            <Rating
-              initialRating={course.review}
-              fractions={2}
-              fullSymbol={<FaStar color="gold" />}
-              emptySymbol={<FaStar color="grey" />}
-              readonly
-            />
-            <p className="pb-[4px]">{`(${course.reviewCount})`}</p>
-          </div>
+          {!onDashboard && (
+            <div className="flex items-center gap-[1px]">
+              <Rating
+                initialRating={course.review}
+                fractions={2}
+                fullSymbol={<FaStar color="gold" />}
+                emptySymbol={<FaStar color="grey" />}
+                readonly
+              />
+              <p className="pb-[4px]">{`(${course.reviewCount})`}</p>
+            </div>
+          )}
           <p className="font-semibold">Rs. {course.price}</p>
         </div>
+        {onDashboard && (
+          <div className="flex gap-2 items-center ">
+            {" "}
+            <p className="pb-[5px] font-semibold text-neutral-500">
+              Your Rating
+            </p>{" "}
+            <Rating
+              initialRating={userReview}
+              fullSymbol={<FaStar color="gold" />}
+              emptySymbol={<FaStar color="grey" />}
+              fractions={2}
+              readonly
+            />
+          </div>
+        )}
         {onDashboard && (
           <ProgressBar now={progress} label={`${progress.toFixed(2)}%`} />
         )}

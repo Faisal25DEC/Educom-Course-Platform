@@ -11,21 +11,21 @@ const Hero = ({ onCourses }) => {
     <div
       className={` flex ${
         onCourses && "md:flex-row-reverse"
-      } flex-col md:flex-row items-center md:justify-between w-[90%] md:w-[80%] m-auto h-[max-content] md:h-[90vh]`}
+      } flex-col md:flex-row items-center md:justify-between w-[90%] md:w-[80%] m-auto h-[min-content] md:h-[90vh]`}
     >
       <div
         className={`${
-          onCourses ? "pl-12" : "pr-12"
-        } py-24 flex-[1.60] h-[100%] flex flex-col gap-6 ${
+          onCourses ? "md:pl-12" : "md:pr-12"
+        } md:py-24 flex-[1.60] h-[100%] flex flex-col-reverse md:flex-col gap-6 ${
           onCourses && "justify-end"
         }`}
       >
-        <h1 className="text-neutral-800 font-bold text-[60px] leading-normal">
+        <h1 className="text-neutral-800 font-bold text-[60px] leading-normal hidden md:block">
           {onCourses
             ? "Explore Courses From The Most Renonwed Experts "
             : "Take Your Learning to The Next Level."}
         </h1>
-        <p className="text-neutral-400 text-[20px] leading-10 pr-8">
+        <p className="text-neutral-400 text-[20px] leading-10 md:pr-8  text-center md:text-left">
           Boost Your Skills With Our Specialized Courses Designed To Make You An
           Expert.
         </p>
@@ -34,7 +34,7 @@ const Hero = ({ onCourses }) => {
           {!auth && (
             <Link to="/login">
               <button
-                className={`bg-[${primaryColor}] py-[0.7rem] px-8 text-white font-semibold text-center rounded-md`}
+                className={`bg-[${primaryColor}] py-[0.7rem] px-8 text-white font-semibold text-center rounded-md m-auto md:m-0`}
               >
                 Get Started
               </button>
@@ -43,7 +43,7 @@ const Hero = ({ onCourses }) => {
           {auth && (
             <Link to={`/dashboard/${currentUser.id}`}>
               <button
-                className={`bg-[${primaryColor}] py-[0.7rem] px-8 text-white font-semibold text-center rounded-md`}
+                className={`bg-[${primaryColor}] py-[0.7rem] px-8 text-white font-semibold text-center rounded-md block m-auto md:m-0`}
               >
                 Got To Dashboard
               </button>
@@ -59,7 +59,7 @@ const Hero = ({ onCourses }) => {
         <img
           src={onCourses ? HeroCoursesImg : HeroImg}
           alt="hero"
-          className="mt-4 h-[100%] w-[100%]"
+          className="mt-4 h-[100%] w-[100%] hidden md:block"
         />
       </div>
     </div>

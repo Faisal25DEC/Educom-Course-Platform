@@ -3,14 +3,16 @@ import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../store/user/user.actions";
 import { useEffect, useRef, useState } from "react";
-import { FaHamburger } from "react-icons/fa";
 import { debounce } from "../utils/script";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { RxCross2 } from "react-icons/rx";
 const Navbar = () => {
   const path = useLocation().pathname;
   const { allCourses } = useSelector((state) => state.coursesReducer);
   const [inputString, setInputString] = useState("");
   const [filteredCourses, setFilteredCourses] = useState([]);
   const { auth, currentUser } = useSelector((state) => state.userReducer);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -153,12 +155,17 @@ const Navbar = () => {
         </ul>
       )}
       <div
-        className="block md:hidden"
-        onClick={() => {
+        className="block md:hidden transition duration-400 ease"
+        onClick={async () => {
+          await setSidebarOpen((prev) => !prev);
           setSidebar();
         }}
       >
-        <FaHamburger />
+        {sidebarOpen ? (
+          <RxCross2 className="w-6 h-6" />
+        ) : (
+          <GiHamburgerMenu className="w-5 h-5" />
+        )}
       </div>
     </div>
   );

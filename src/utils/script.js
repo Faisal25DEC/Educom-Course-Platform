@@ -54,6 +54,12 @@ export const getCourseProgress = (courses, courseId) => {
   return (count / total) * 100;
 };
 
+export const getUserReview = (courses, id) => {
+  const course = courses.find((ele) => ele.id === id);
+  console.log(course);
+  return course.review;
+};
+
 export const debounce = (func, delay) => {
   let timeoutId;
   return (...args) => {

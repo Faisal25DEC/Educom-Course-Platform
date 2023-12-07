@@ -26,8 +26,8 @@ const Banner = () => {
   return (
     <div className="w-[100%] bg-[#fafbff] py-8">
       <div className="w-[90%] md:w-[80%] flex flex-col md:flex-row items-center gap-4 m-auto">
-        <div className="flex-[3] border-r-[1px] border-neutral-700 px-2">
-          <p className="text-neutral-800 text-[22px] font-medium leading-[2.5rem]">
+        <div className="flex-[3] md:border-r-[1px] border-neutral-700 px-2">
+          <p className="text-neutral-800 text-[22px] font-medium leading-[2.5rem] text-center md:text-left">
             Trusted By Over 1200+ Companies All Around the World
           </p>
         </div>

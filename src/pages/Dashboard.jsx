@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { db } from "../firebase/firebase";
 import { toast } from "react-toastify";
 import CourseCard from "../components/CourseCard";
-import { getProgress } from "../utils/script";
+import { getProgress, getUserReview } from "../utils/script";
 
 const Dashboard = () => {
   const { currentUser } = useSelector((state) => state.userReducer);
@@ -53,6 +53,7 @@ const Dashboard = () => {
                 course={course}
                 onDashboard
                 progress={getProgress(currentUser?.courses, course.id)}
+                userReview={getUserReview(currentUser?.courses, course.id)}
               />
             );
           }
