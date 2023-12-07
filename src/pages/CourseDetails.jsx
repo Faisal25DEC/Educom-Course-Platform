@@ -170,7 +170,8 @@ const CourseDetails = () => {
                       const updatedData = {
                         ...course,
                         review:
-                          (course.review + value) / (course.reviewCount + 1),
+                          (course.review * course.reviewCount + value) /
+                          (course.reviewCount + 1),
                         reviewCount: course.reviewCount + 1,
                       };
 
