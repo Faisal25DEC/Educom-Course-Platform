@@ -25,7 +25,7 @@ const Hero = ({ onCourses }) => {
             ? "Explore Courses From The Most Renonwed Experts "
             : "Take Your Learning to The Next Level."}
         </h1>
-        <p className="text-neutral-400 text-[20px] leading-10 md:pr-8  text-center md:text-left">
+        <p className="text-neutral-400 text-[20px] leading-10 md:pr-8 maxSm:text-center ">
           Boost Your Skills With Our Specialized Courses Designed To Make You An
           Expert.
         </p>
@@ -34,7 +34,7 @@ const Hero = ({ onCourses }) => {
           {!auth && (
             <Link to="/login">
               <button
-                className={`bg-[${primaryColor}] py-[0.7rem] px-8 text-white font-semibold text-center rounded-md block m-auto md:m-0`}
+                className={`bg-[${primaryColor}] py-[0.7rem] px-8 text-white font-semibold text-center rounded-md block maxSm:m-auto`}
               >
                 Get Started
               </button>
@@ -43,7 +43,7 @@ const Hero = ({ onCourses }) => {
           {auth && (
             <Link to={`/dashboard/${currentUser.id}`}>
               <button
-                className={`bg-[${primaryColor}] py-[0.7rem] px-8 text-white font-semibold text-center rounded-md block m-auto md:m-0`}
+                className={`bg-[${primaryColor}] py-[0.7rem] px-8 text-white font-semibold text-center rounded-md block maxSm:m-auto`}
               >
                 Got To Dashboard
               </button>
