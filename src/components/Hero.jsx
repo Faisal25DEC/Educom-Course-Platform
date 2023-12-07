@@ -34,7 +34,7 @@ const Hero = ({ onCourses }) => {
           {!auth && (
             <Link to="/login">
               <button
-                className={`bg-[${primaryColor}] py-[0.7rem] px-8 text-white font-semibold text-center rounded-md m-auto md:m-0`}
+                className={`bg-[${primaryColor}] py-[0.7rem] px-8 text-white font-semibold text-center rounded-md block m-auto md:m-0`}
               >
                 Get Started
               </button>
