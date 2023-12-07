@@ -18,9 +18,11 @@ const Navbar = () => {
 
   const setSidebar = () => {
     if (sidebarRef.current.style.left === "0px") {
+      setSidebarOpen(false);
       sidebarRef.current.style.left = "-100%";
     } else {
       sidebarRef.current.style.left = "0px";
+      setSidebarOpen(true);
     }
   };
 
@@ -156,8 +158,7 @@ const Navbar = () => {
       )}
       <div
         className="block md:hidden transition duration-400 ease"
-        onClick={async () => {
-          await setSidebarOpen((prev) => !prev);
+        onClick={() => {
           setSidebar();
         }}
       >
